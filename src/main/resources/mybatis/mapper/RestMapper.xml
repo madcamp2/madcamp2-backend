@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.everytask.model.dao.RestMapper">
+
+    <select id="getAllUserList" resultType="com.example.everytask.model.dto.User">
+        SELECT * FROM user;
+    </select>
+
+    <select id="getSingleUser" resultType="com.example.everytask.model.dto.User">
+        SELECT * FROM user WHERE id = #{userId};
+    </select>
+
+    <insert id="userSignUp" parameterType="com.example.everytask.model.dto.UserSignUpForm">
+        INSERT INTO user(name, auth_type, email, password) VALUES (#{item.name}, #{item.auth_type}, #{item.email}, #{item.password});
+    </insert>
+
+</mapper>
+
+<!--Mybatis 에서 Mapper Interface 제공-->
+<!--DAO 대신 제공되는 Mapper Interface를 사용하며, 해당 파일은 mybatis를 이용해 분리한 sql문들을 저장하는 파일이다.-->
+<!--쿼리가 필요한 경우 질의문을 관리하는 Mapper파일(해당 파일)로 요청이 온다.-->
