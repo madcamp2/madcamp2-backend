@@ -1,13 +1,16 @@
 package com.example.everytask.service;
 
-import com.example.everytask.model.dto.User;
+import com.example.everytask.model.dto.UserObject;
+import com.example.everytask.model.dto.UserRequestTransferObject;
 import com.example.everytask.model.dto.UserSignUpForm;
+import com.example.everytask.model.formats.DefaultResponse;
 
 import java.util.List;
 
 public interface RestServiceInterface {
-    List<User> getAllUserList();
-    User getSingleUser(int userId);
-    boolean userSignUp(UserSignUpForm userSignUpForm);
+    List<UserObject> getAllUserList();
+    UserObject getSingleUser(int userId);
+    DefaultResponse userSignUp(UserRequestTransferObject.SignUp signUpForm);
+    DefaultResponse userSignIn(UserRequestTransferObject.SignIn userSignInForm);
 }
 

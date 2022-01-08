@@ -11,4 +11,5 @@ public class ResponseMessage {
     public static final String INTERNAL_SERVER_ERROR = "서버 내부 에러";
     public static final String DB_ERROR = "데이터베이스 에러";
     public static final String SIGNUP_FAILED = "회원가입 실패";
+    public static final String ALREADY_EXISTS = "이미 존재하는 회원입니다";
 }

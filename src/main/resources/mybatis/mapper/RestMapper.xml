@@ -5,16 +5,24 @@
 
 <mapper namespace="com.example.everytask.model.dao.RestMapper">
 
-    <select id="getAllUserList" resultType="com.example.everytask.model.dto.User">
+    <select id="getAllUserList" resultType="com.example.everytask.model.dto.UserObject">
         SELECT * FROM user;
     </select>
 
-    <select id="getSingleUser" resultType="com.example.everytask.model.dto.User">
+    <select id="getSingleUser" resultType="com.example.everytask.model.dto.UserObject">
         SELECT * FROM user WHERE id = #{userId};
+    </select>
+
+    <select id="findByEmail" resultType="com.example.everytask.model.dto.UserObject">
+        SELECT * FROM user WHERE email = #{email} LIMIT 1;
     </select>
 
     <insert id="userSignUp" parameterType="com.example.everytask.model.dto.UserSignUpForm">
         INSERT INTO user(name, auth_type, email, password) VALUES (#{item.name}, #{item.auth_type}, #{item.email}, #{item.password});
+    </insert>
+
+    <insert id="addUser" parameterType="com.example.everytask.model.dto.UserObject">
+        INSERT INTO user(name, auth_type, email, password) VALUES (#{user.name}, #{user.auth_type}, #{user.email}, #{user.password});
     </insert>
 
 </mapper>
