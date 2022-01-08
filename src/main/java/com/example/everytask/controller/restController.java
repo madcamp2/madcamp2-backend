@@ -9,9 +9,9 @@ import com.example.everytask.model.formats.StatusCode;
 import com.example.everytask.service.RestServiceInterface;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -47,6 +47,9 @@ public class restController {
         return service.refreshToken(reissue);
     }
 
-
+    @GetMapping("course/search")
+    public DefaultResponse searchCourse(@RequestParam String keyword){
+        return service.searchCourse(keyword);
+    }
 }
 

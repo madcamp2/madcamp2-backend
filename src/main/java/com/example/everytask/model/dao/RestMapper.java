@@ -1,12 +1,11 @@
 package com.example.everytask.model.dao;
 
-import com.example.everytask.model.dto.RefreshTokenMapping;
-import com.example.everytask.model.dto.UserObject;
-import com.example.everytask.model.dto.UserRequestTransferObject;
-import com.example.everytask.model.dto.UserSignUpForm;
+import com.example.everytask.model.dto.*;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.javassist.Loader;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,4 +18,11 @@ public interface RestMapper {
     UserObject findByEmail(String email);
     void addUser(@Param("user")UserObject userObject);
     RefreshTokenMapping isThereRefreshToken(String refreshToken);
+    int getIdFromUserEmail(String email);
+    String getNameFromUserID(int id);
+    String getNameFromOrgID(int id);
+    ArrayList<Organization> getOrgsFromUserId(int id);
+    ArrayList<SimpleUserObject> getFollowersFromUserId(int id);
+    ArrayList<SimpleUserObject> getFollowsFromUserId(int id);
+    ArrayList<CourseObject> getCourseListFromKeyword(String keyword);
 }

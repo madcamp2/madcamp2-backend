@@ -2,29 +2,27 @@ package com.example.everytask.service;
 
 import com.example.everytask.jwt.JwtTokenProvider;
 import com.example.everytask.model.dao.RestMapper;
-import com.example.everytask.model.dto.RefreshTokenMapping;
-import com.example.everytask.model.dto.UserObject;
-import com.example.everytask.model.dto.UserRequestTransferObject;
-import com.example.everytask.model.dto.UserResponseTransferObject;
+import com.example.everytask.model.dto.*;
 
-import com.example.everytask.model.formats.Authority;
 import com.example.everytask.model.formats.DefaultResponse;
 import com.example.everytask.model.formats.ResponseMessage;
 import com.example.everytask.model.formats.StatusCode;
+import com.example.everytask.trivialModules.NameCreate;
 import lombok.RequiredArgsConstructor;
 
-import org.apache.el.parser.Token;
+import org.apache.catalina.User;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
-import java.util.Collections;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -36,6 +34,7 @@ public class RestService implements RestServiceInterface {
     private final JwtTokenProvider jwtTokenProvider;
     private final PasswordEncoder passwordEncoder;
     private final RedisTemplate redisTemplate;
+    private final NameCreate nameCreate;
 
     @Override
     public List<UserObject> getAllUserList(){
@@ -52,13 +51,12 @@ public class RestService implements RestServiceInterface {
         if (restMapper.findByEmail(signUpForm.getEmail()) != null){
             return DefaultResponse.res(StatusCode.BAD_REQUEST, ResponseMessage.ALREADY_EXISTS);
         }
-        if (signUpForm.getName() == null) signUpForm.setName("익명유저");
-        signUpForm.setAuth_type("APP");
+//        if (signUpForm.getName() == null) signUpForm.setName("익명유저");
         UserObject userObject = UserObject.builder()
                 .email(signUpForm.getEmail())
                 .password(passwordEncoder.encode(signUpForm.getPassword()))
                 .auth_type(signUpForm.getAuth_type())
-                .name(signUpForm.getName())
+                .name(nameCreate.randomName())
                 .build();
         restMapper.addUser(userObject);
         return DefaultResponse.res(StatusCode.OK, ResponseMessage.CREATED_USER);
@@ -118,8 +116,17 @@ public class RestService implements RestServiceInterface {
         if (authentication.getName().equals("anonymousUser")){
             return DefaultResponse.res(StatusCode.NEED_REFRESH, ResponseMessage.REQUIRES_TOKEN_UPDATE);
         }
-        return DefaultResponse.res(StatusCode.OK, ResponseMessage.READ_USER, authentication.getName());
+        //유저 id 받아옴
+        int userId = restMapper.getIdFromUserEmail(authentication.getName());
+        UserDetail userDetail = UserDetail.builder()
+                .email(authentication.getName())
+                .name(restMapper.getNameFromUserID(userId))
+                .organizations(restMapper.getOrgsFromUserId(userId))
+                .followers(restMapper.getFollowersFromUserId(userId))
+                .follows(restMapper.getFollowsFromUserId(userId)).build();
+        return DefaultResponse.res(StatusCode.OK, ResponseMessage.READ_USER, userDetail);
     }
+
 
     public DefaultResponse refreshToken(UserRequestTransferObject.Reissue reissue){
         RefreshTokenMapping refreshTokenMapping;
@@ -134,6 +141,16 @@ public class RestService implements RestServiceInterface {
             //3-2. RefreshToken이 있으면 이를 기반으로 다시 accesstoken을 만들어줘야 함.
         }
         return DefaultResponse.res(111, "boom");
+    }
+
+    public DefaultResponse searchCourse(String keyword) {
+        ArrayList<CourseObject> courseObjects = new ArrayList<CourseObject>();
+        courseObjects = restMapper.getCourseListFromKeyword(keyword);
+        if (courseObjects.size() < 1) return DefaultResponse.res(StatusCode.NOT_FOUND, ResponseMessage.RESULT_NON_FOUND);
+        for (int i = 0; i < courseObjects.size(); i++){
+            courseObjects.get(i).setOrganization_name(restMapper.getNameFromOrgID(courseObjects.get(i).getOrganization_id()));
+        }
+        return DefaultResponse.res(StatusCode.OK, ResponseMessage.RESULT_FOUND, courseObjects);
     }
 
 }

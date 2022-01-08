@@ -1,8 +1,17 @@
-package com.example.everytask.tmodules;
+package com.example.everytask.trivialModules;
+
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Random;
 
+@Getter
+@Setter
+@Component
 public class NameCreate {
     ArrayList<String> firstNames = new ArrayList<>(Arrays.asList(
             "화난",
@@ -20,5 +29,11 @@ public class NameCreate {
             "사자",
             "고양이"
     ));
+
+    public String randomName(){
+        String firstName = firstNames.get(new Random().nextInt(firstNames.size()));
+        String secondName = secondNames.get(new Random().nextInt(secondNames.size()));
+        return firstName + " " + secondName;
+    }
 
 }

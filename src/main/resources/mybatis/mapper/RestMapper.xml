@@ -29,6 +29,33 @@
         SELECT * FROM token WHERE refresh_token = #{refreshToken};
     </select>
 
+    <select id="getIdFromUserEmail"  resultType="int">
+        SELECT id FROM user WHERE email = #{email} LIMIT 1;
+    </select>
+
+    <select id="getNameFromUserID"  resultType="String">
+        SELECT name FROM user WHERE id = #{id} LIMIT 1;
+    </select>
+
+    <select id="getNameFromOrgID"  resultType="String">
+        SELECT name FROM organization WHERE id = #{id} LIMIT 1;
+    </select>
+
+    <select id="getOrgsFromUserId"  resultType="com.example.everytask.model.dto.Organization">
+        SELECT * FROM organization as A inner join belongs as B ON A.id=B.organization_id and B.user_id=#{id};
+    </select>
+
+    <select id="getFollowersFromUserId" resultType="com.example.everytask.model.dto.SimpleUserObject">
+        SELECT id, name, email FROM user as A inner join follows as B ON A.id=B.from_id and B.to_id=#{id};
+    </select>
+
+    <select id="getFollowsFromUserId" resultType="com.example.everytask.model.dto.SimpleUserObject">
+        "SELECT id, name, email FROM user as A inner join follows as B ON A.id=B.to_id and B.from_id=#{id};"
+    </select>
+
+    <select id="getCourseListFromKeyword" resultType="com.example.everytask.model.dto.CourseObject">
+        SELECT * FROM course where course_name like CONCAT('%',#{keyword},'%') OR course_code like CONCAT('%',#{keyword},'%');
+    </select>
 </mapper>
 
 <!--Mybatis 에서 Mapper Interface 제공-->

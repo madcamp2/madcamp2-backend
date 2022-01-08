@@ -22,8 +22,6 @@ public class UserRequestTransferObject {
         private String password;
 
         private String auth_type;
-
-        private String name;
     }
 
     @Getter

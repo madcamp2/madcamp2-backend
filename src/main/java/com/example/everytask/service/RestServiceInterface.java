@@ -15,5 +15,6 @@ public interface RestServiceInterface {
     DefaultResponse reissue(UserRequestTransferObject.Reissue reissue);
     DefaultResponse userInfo();
     DefaultResponse refreshToken(UserRequestTransferObject.Reissue reissue);
+    DefaultResponse searchCourse(String keyword);
 }
 
