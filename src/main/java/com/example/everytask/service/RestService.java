@@ -55,7 +55,7 @@ public class RestService implements RestServiceInterface {
                 .email(signUpForm.getEmail())
                 .password(passwordEncoder.encode(signUpForm.getPassword()))
                 .auth_type(signUpForm.getAuth_type())
-                .name(nameCreate.randomName())
+                .name("nameCreate.randomName()")
                 .build();
         restMapper.addUser(userObject);
         return DefaultResponse.res(StatusCode.OK, ResponseMessage.CREATED_USER);
