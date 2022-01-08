@@ -51,7 +51,6 @@ public class RestService implements RestServiceInterface {
         if (restMapper.findByEmail(signUpForm.getEmail()) != null){
             return DefaultResponse.res(StatusCode.BAD_REQUEST, ResponseMessage.ALREADY_EXISTS);
         }
-//        if (signUpForm.getName() == null) signUpForm.setName("익명유저");
         UserObject userObject = UserObject.builder()
                 .email(signUpForm.getEmail())
                 .password(passwordEncoder.encode(signUpForm.getPassword()))
