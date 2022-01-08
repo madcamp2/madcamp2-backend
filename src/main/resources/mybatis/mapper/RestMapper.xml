@@ -17,17 +17,9 @@
         SELECT * FROM user WHERE email = #{email} LIMIT 1;
     </select>
 
-    <insert id="userSignUp" parameterType="com.example.everytask.model.dto.UserSignUpForm">
+    <insert id="addUser" parameterType="com.example.everytask.model.dto.UserObject">
         INSERT INTO user(name, auth_type, email, password) VALUES (#{item.name}, #{item.auth_type}, #{item.email}, #{item.password});
     </insert>
-
-    <insert id="addUser" parameterType="com.example.everytask.model.dto.UserObject">
-        INSERT INTO user(name, auth_type, email, password) VALUES (#{user.name}, #{user.auth_type}, #{user.email}, #{user.password});
-    </insert>
-
-    <select id="isThereRefreshToken" resultType="com.example.everytask.model.dto.RefreshTokenMapping">
-        SELECT * FROM token WHERE refresh_token = #{refreshToken};
-    </select>
 
     <select id="getIdFromUserEmail"  resultType="int">
         SELECT id FROM user WHERE email = #{email} LIMIT 1;

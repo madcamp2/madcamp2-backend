@@ -16,7 +16,7 @@ public interface RestMapper {
     List<UserObject> getAllUserList();
     UserObject getSingleUser(int userId);
     UserObject findByEmail(String email);
-    void addUser(@Param("user")UserObject userObject);
+    void addUser(@Param("item")UserObject userObject);
     RefreshTokenMapping isThereRefreshToken(String refreshToken);
     int getIdFromUserEmail(String email);
     String getNameFromUserID(int id);
