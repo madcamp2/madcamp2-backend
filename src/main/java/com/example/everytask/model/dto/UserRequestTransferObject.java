@@ -1,6 +1,7 @@
 package com.example.everytask.model.dto;
 
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
@@ -40,6 +41,13 @@ public class UserRequestTransferObject {
             //인증객체 생성
             return new UsernamePasswordAuthenticationToken(email, password);
         }
+    }
+
+    @Getter
+    @Setter
+    public static class UserInfo {
+        @NonNull
+        private String accessToken;
     }
 
     @Getter

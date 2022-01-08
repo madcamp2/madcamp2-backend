@@ -60,9 +60,25 @@ public class restController {
 
     @PostMapping("user/sign-up")
     public DefaultResponse userSignUp(@RequestBody UserRequestTransferObject.SignUp userSignUpForm){
-        System.out.println(1);
         return service.userSignUp(userSignUpForm);
     }
+
+
+    @PostMapping("user/reissue")
+    public DefaultResponse reissue(@RequestBody UserRequestTransferObject.Reissue reissue){
+        return service.reissue(reissue);
+    }
+
+    @GetMapping("user/info")
+    public DefaultResponse userInfo(){
+        return service.userInfo();
+    }
+
+    @PostMapping("user/refresh-token")
+    public DefaultResponse refreshToken(@RequestBody UserRequestTransferObject.Reissue reissue){
+        return service.refreshToken(reissue);
+    }
+
 
 }
 

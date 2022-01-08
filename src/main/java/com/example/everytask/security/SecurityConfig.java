@@ -3,6 +3,7 @@ package com.example.everytask.security;
 import com.example.everytask.jwt.JwtAuthenticationFilter;
 import com.example.everytask.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.validator.cfg.defs.CreditCardNumberDef;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,7 +23,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final JwtTokenProvider jwtTokenProvider;
-    private final RedisTemplate redisTemplate;
+//    private final RedisTemplate redisTemplate;
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
@@ -32,9 +33,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/users/sign-up", "/users/sign-in", "/users/reissue", "/users/logout").permitAll()
+                .antMatchers("%").permitAll()
                 .and()
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, redisTemplate), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
         // JwtAuthenticationFilter를 UsernamePasswordAuthentictaionFilter 전에 적용시킨다.
     }
 
@@ -44,3 +45,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 }
+
+
+//                        .antMatchers("/user/info").hasRole("USER")
+//                        .antMatchers().hasRole("ADMIN")

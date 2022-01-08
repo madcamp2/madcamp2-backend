@@ -12,5 +12,8 @@ public interface RestServiceInterface {
     UserObject getSingleUser(int userId);
     DefaultResponse userSignUp(UserRequestTransferObject.SignUp signUpForm);
     DefaultResponse userSignIn(UserRequestTransferObject.SignIn userSignInForm);
+    DefaultResponse reissue(UserRequestTransferObject.Reissue reissue);
+    DefaultResponse userInfo();
+    DefaultResponse refreshToken(UserRequestTransferObject.Reissue reissue);
 }
 

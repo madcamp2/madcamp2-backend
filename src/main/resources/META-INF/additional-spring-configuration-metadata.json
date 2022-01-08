@@ -9,5 +9,10 @@
       "name": "jwt.secret",
       "type": "java.lang.String",
       "description": "Secret key."
+    },
+    {
+      "name": "mybatis.config",
+      "type": "java.lang.String",
+      "description": "Description for mybatis.config."
     }
   ] }

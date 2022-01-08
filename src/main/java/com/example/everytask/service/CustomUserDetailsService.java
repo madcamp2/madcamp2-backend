@@ -25,6 +25,8 @@ public class CustomUserDetailsService implements UserDetailsService {
         }
         return users;
     }
+    //---- 아래 함수에서는 UserObject가 일반 생성자로만 들어감. (DB를 JPA로 다루지도 않고, Entity도 아니다 보니까 차이가 있었던 듯.
+    // ---- 그런데 UserObject 클래스의 경우 UserDetail을 구현한 클래스기 때문에 그대로 리턴해도 상관이 없음. 너무 꼬아서 생각했음
 
 //    // 해당하는 User 의 데이터가 존재한다면 UserDetails 객체로 만들어서 리턴
 //    private UserDetails createUserDetails(UserObject users) {

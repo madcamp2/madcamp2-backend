@@ -1,5 +1,6 @@
 package com.example.everytask.model.dao;
 
+import com.example.everytask.model.dto.RefreshTokenMapping;
 import com.example.everytask.model.dto.UserObject;
 import com.example.everytask.model.dto.UserRequestTransferObject;
 import com.example.everytask.model.dto.UserSignUpForm;
@@ -15,8 +16,7 @@ import java.util.Optional;
 public interface RestMapper {
     List<UserObject> getAllUserList();
     UserObject getSingleUser(int userId);
-    int userSignUp(@Param("item") UserSignUpForm userSignUpForm);
-//    Optional<UserObject> findByEmail(String email); //avoid nullpointerException
     UserObject findByEmail(String email);
     void addUser(@Param("user")UserObject userObject);
+    RefreshTokenMapping isThereRefreshToken(String refreshToken);
 }

@@ -2,6 +2,7 @@ package com.example.everytask.service;
 
 import com.example.everytask.jwt.JwtTokenProvider;
 import com.example.everytask.model.dao.RestMapper;
+import com.example.everytask.model.dto.RefreshTokenMapping;
 import com.example.everytask.model.dto.UserObject;
 import com.example.everytask.model.dto.UserRequestTransferObject;
 import com.example.everytask.model.dto.UserResponseTransferObject;
@@ -12,16 +13,20 @@ import com.example.everytask.model.formats.ResponseMessage;
 import com.example.everytask.model.formats.StatusCode;
 import lombok.RequiredArgsConstructor;
 
+import org.apache.el.parser.Token;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +35,7 @@ public class RestService implements RestServiceInterface {
     private final AuthenticationManagerBuilder authenticationManagerBuilder; //?
     private final JwtTokenProvider jwtTokenProvider;
     private final PasswordEncoder passwordEncoder;
+    private final RedisTemplate redisTemplate;
 
     @Override
     public List<UserObject> getAllUserList(){
@@ -75,11 +81,59 @@ public class RestService implements RestServiceInterface {
         //3. authentication이 정상적으로 이루어지면 받아온 인증 정보 기반으로 토큰을 생성
         UserResponseTransferObject.TokenInfo tokenInfo = jwtTokenProvider.generateToken(authentication);
 
-
-        //redis 구현해야 함
+        redisTemplate.opsForValue()
+                .set("RT:"+authentication.getName(), tokenInfo.getRefreshToken(), tokenInfo.getRefreshTokenExpirationTime(), TimeUnit.MILLISECONDS);
 
         //토큰과 response code 200을 반환
         return DefaultResponse.res(StatusCode.OK, ResponseMessage.LOGIN_SUCCESS, tokenInfo);
+    }
+
+    public DefaultResponse reissue(UserRequestTransferObject.Reissue reissue) {
+        //Refreshtoken검증
+        if (!jwtTokenProvider.validateToken(reissue.getRefreshToken())){
+            return DefaultResponse.res(StatusCode.BAD_REQUEST, ResponseMessage.TOKEN_FAILED);
+        }
+        //access token에서 user email을 가져온다.
+        Authentication authentication = jwtTokenProvider.getAuthentication(reissue.getAccessToken());
+
+        String refreshToken = (String) redisTemplate.opsForValue().get("RT:"+authentication.getName());
+        if (!refreshToken.equals(reissue.getRefreshToken())){
+            return DefaultResponse.res(StatusCode.BAD_REQUEST, ResponseMessage.TOKEN_FAILED);
+        }
+
+        UserResponseTransferObject.TokenInfo tokenInfo = jwtTokenProvider.generateToken(authentication);
+
+        redisTemplate.opsForValue()
+                .set("RT:" + authentication.getName(), tokenInfo.getRefreshToken(), tokenInfo.getRefreshTokenExpirationTime(), TimeUnit.MILLISECONDS);
+
+        return DefaultResponse.res(StatusCode.OK, ResponseMessage.TOKEN_UPDATED, tokenInfo);
+    }
+
+    public DefaultResponse userInfo(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null) {
+            //토큰 정보가 아예 소실된 경우
+            return DefaultResponse.res(StatusCode.BAD_REQUEST, ResponseMessage.TOKEN_FAILED);
+        }
+        if (authentication.getName().equals("anonymousUser")){
+            return DefaultResponse.res(StatusCode.NEED_REFRESH, ResponseMessage.REQUIRES_TOKEN_UPDATE);
+        }
+        return DefaultResponse.res(StatusCode.OK, ResponseMessage.READ_USER, authentication.getName());
+    }
+
+    public DefaultResponse refreshToken(UserRequestTransferObject.Reissue reissue){
+        RefreshTokenMapping refreshTokenMapping;
+        //1. Expiration이 0보다 작은 경우. 즉 access token이 만료된 경우
+        if (jwtTokenProvider.getExpiration(reissue.getAccessToken()) < 0) {
+            //2. Refreshtoken을 저장한 테이블에 refreshtoken이 있는지 확인
+            refreshTokenMapping = restMapper.isThereRefreshToken(reissue.getRefreshToken());
+            if (refreshTokenMapping == null){
+                //3-1. Refreshtoken이 없으면 로그인을 다시 해야 하는 유저거나 없던 유저
+                return DefaultResponse.res(111, "boom");
+            }
+            //3-2. RefreshToken이 있으면 이를 기반으로 다시 accesstoken을 만들어줘야 함.
+        }
+        return DefaultResponse.res(111, "boom");
     }
 
 }

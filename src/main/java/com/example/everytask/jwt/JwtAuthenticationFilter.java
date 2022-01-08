@@ -24,7 +24,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
     private static final String BEARER_TYPE = "Bearer";
 
     private final JwtTokenProvider jwtTokenProvider;
-    private final RedisTemplate redisTemplate;
+//    private final RedisTemplate redisTemplate;
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
@@ -35,21 +35,25 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         // 2. validateToken 으로 토큰 유효성 검사
         if (token != null && jwtTokenProvider.validateToken(token)) {
             // (추가) Redis 에 해당 accessToken logout 여부 확인
-            String isLogout = (String)redisTemplate.opsForValue().get(token);
-            if (ObjectUtils.isEmpty(isLogout)) {
-                // 토큰이 유효할 경우 토큰에서 Authentication 객체를 가지고 와서 SecurityContext 에 저장
-                Authentication authentication = jwtTokenProvider.getAuthentication(token);
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-            }
+//            String isLogout = (String)redisTemplate.opsForValue().get(token);
+//            if (ObjectUtils.isEmpty(isLogout)) {
+//                // 토큰이 유효할 경우 토큰에서 Authentication 객체를 가지고 와서 SecurityContext 에 저장
+//                Authentication authentication = jwtTokenProvider.getAuthentication(token);
+//                SecurityContextHolder.getContext().setAuthentication(authentication);
+//            }
+            Authentication authentication = jwtTokenProvider.getAuthentication(token);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+        } else {
+            SecurityContextHolder.getContext().setAuthentication(null);
         }
         chain.doFilter(request, response);
     }
 
-    // Request Header 에서 토큰 정보 추출
+    // Request Header 에서 토큰 추출 ( 헤더 속 Bearer: ~~에 접근해서 빼오는 구조 )
     private String resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_TYPE)) {
-            return bearerToken.substring(7);
+            return bearerToken.substring(7); //토큰이 Bearer 토큰으로 시작하는지 확인한 후에 'Bearer' + 공백 한 자리 잘라냄
         }
         return null;
     }

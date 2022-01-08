@@ -25,6 +25,10 @@
         INSERT INTO user(name, auth_type, email, password) VALUES (#{user.name}, #{user.auth_type}, #{user.email}, #{user.password});
     </insert>
 
+    <select id="isThereRefreshToken" resultType="com.example.everytask.model.dto.RefreshTokenMapping">
+        SELECT * FROM token WHERE refresh_token = #{refreshToken};
+    </select>
+
 </mapper>
 
 <!--Mybatis 에서 Mapper Interface 제공-->
