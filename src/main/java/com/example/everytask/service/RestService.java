@@ -19,11 +19,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
+import reactor.util.annotation.Nullable;
 
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -66,31 +65,23 @@ public class RestService implements RestServiceInterface {
             return DefaultResponse.res(StatusCode.NOT_FOUND, ResponseMessage.NOT_FOUND_USER);
         }
 
-        //1. signInForm의 데이터(아이디, 비밀번호)기반으로 authentication 객체로 변환
-        //아직 인증된 상태는 아니고 인증을 위한 객체로만 변환된 것
         UsernamePasswordAuthenticationToken authenticationToken = signInForm.toAuthenticationObject();
-        //2. 아이디랑 비밀번호로 우선 인증 객체를 생성한 뒤, 비밀번호가 맞는지를 검증하는 단계 - authenticationManager 객체를 받아서 authenticate 메서드 실행하면
-        //CustomerUserDetailService 에서 만든 loadUserByName 메서드 실행. 즉 db에 접근해서 사용자 정보를 가지고 온다.
-        //Spring Security 동작원리상 AuthenticationManager interface 를 구현한 ProviderManager 클래스의 authenticate() 메서드가 동작
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
-
-        //3. authentication이 정상적으로 이루어지면 받아온 인증 정보 기반으로 토큰을 생성
         UserResponseTransferObject.TokenInfo tokenInfo = jwtTokenProvider.generateToken(authentication);
 
         redisTemplate.opsForValue()
                 .set("RT:"+authentication.getName(), tokenInfo.getRefreshToken(), tokenInfo.getRefreshTokenExpirationTime(), TimeUnit.MILLISECONDS);
 
-        //토큰과 response code 200을 반환
         return DefaultResponse.res(StatusCode.OK, ResponseMessage.LOGIN_SUCCESS, tokenInfo);
     }
 
     public DefaultResponse reissue(UserRequestTransferObject.Reissue reissue) {
-        //Refreshtoken검증
+
         if (!jwtTokenProvider.validateToken(reissue.getRefreshToken())){
             return DefaultResponse.res(StatusCode.BAD_REQUEST, ResponseMessage.TOKEN_FAILED);
         }
-        //access token에서 user email을 가져온다.
+
         Authentication authentication = jwtTokenProvider.getAuthentication(reissue.getAccessToken());
 
         String refreshToken = (String) redisTemplate.opsForValue().get("RT:"+authentication.getName());
@@ -115,14 +106,14 @@ public class RestService implements RestServiceInterface {
         if (authentication.getName().equals("anonymousUser")){
             return DefaultResponse.res(StatusCode.NEED_REFRESH, ResponseMessage.REQUIRES_TOKEN_UPDATE);
         }
-        //유저 id 받아옴
         int userId = restMapper.getIdFromUserEmail(authentication.getName());
         UserDetail userDetail = UserDetail.builder()
                 .email(authentication.getName())
                 .name(restMapper.getNameFromUserID(userId))
                 .organizations(restMapper.getOrgsFromUserId(userId))
                 .followers(restMapper.getFollowersFromUserId(userId))
-                .follows(restMapper.getFollowsFromUserId(userId)).build();
+                .follows(restMapper.getFollowsFromUserId(userId))
+                .build();
         return DefaultResponse.res(StatusCode.OK, ResponseMessage.READ_USER, userDetail);
     }
 
@@ -148,8 +139,27 @@ public class RestService implements RestServiceInterface {
         if (courseObjects.size() < 1) return DefaultResponse.res(StatusCode.NOT_FOUND, ResponseMessage.RESULT_NON_FOUND);
         for (int i = 0; i < courseObjects.size(); i++){
             courseObjects.get(i).setOrganization_name(restMapper.getNameFromOrgID(courseObjects.get(i).getOrganization_id()));
+            courseObjects.get(i).setCourse_followers(restMapper.getCourseFollowersFromCourseID(courseObjects.get(i).getId()));
         }
+        Collections.sort(courseObjects, new Comparator<CourseObject>() {
+            @Override
+            public int compare(CourseObject o1, CourseObject o2) {
+                int o1f = o1.getCourse_followers();
+                int o2f = o2.getCourse_followers();
+                return -Integer.compare(o1f, o2f);
+            }
+        });
         return DefaultResponse.res(StatusCode.OK, ResponseMessage.RESULT_FOUND, courseObjects);
+    }
+
+    public DefaultResponse getUserToDo(int userId){
+        String userName = restMapper.getNameFromUserID(userId);
+        ArrayList<UserToDo> userTasks = restMapper.getUserToDo(userId);
+        for (UserToDo userTask : userTasks) {
+            userTask.setUser_name(userName);
+            userTask.setReactionList(restMapper.getRecationsFromTaskId(userTask.getId()));
+        }
+        return DefaultResponse.res(StatusCode.OK, ResponseMessage.RESULT_FOUND, userTasks);
     }
 
 }

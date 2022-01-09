@@ -23,11 +23,29 @@ public class NameCreate {
             "깐죽대는",
             "재빠른",
             "여린",
-            "순수한"
+            "순수한",
+            "용감한",
+            "겁없는",
+            "다정한",
+            "행복한",
+            "슬픈"
     ));
     ArrayList<String> secondNames = new ArrayList<String>(Arrays.asList(
-            "사자",
-            "고양이"
+            "사신",
+            "해적",
+            "바야바",
+            "엘프",
+            "악마",
+            "검투사",
+            "제우스",
+            "현자",
+            "드라큘라",
+            "천사",
+            "바이킹",
+            "지니",
+            "황제",
+            "기사",
+            "갓파쿠"
     ));
 
     public String randomName(){

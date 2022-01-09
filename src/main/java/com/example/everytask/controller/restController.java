@@ -51,5 +51,10 @@ public class restController {
     public DefaultResponse searchCourse(@RequestParam String keyword){
         return service.searchCourse(keyword);
     }
+
+    @GetMapping("user/todo")
+    public DefaultResponse getUserTodo(@RequestParam int id) {
+        return service.getUserToDo(id);
+    }
 }
 

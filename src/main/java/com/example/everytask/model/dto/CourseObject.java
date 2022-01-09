@@ -20,4 +20,5 @@ public class CourseObject {
     private String building_name;
     private int organization_id;
     private String organization_name;
+    private int course_followers;
 }

@@ -3,6 +3,7 @@ package com.example.everytask.model.dao;
 import com.example.everytask.model.dto.*;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.javassist.Loader;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -21,8 +22,15 @@ public interface RestMapper {
     int getIdFromUserEmail(String email);
     String getNameFromUserID(int id);
     String getNameFromOrgID(int id);
+    @Nullable
     ArrayList<Organization> getOrgsFromUserId(int id);
+    @Nullable
     ArrayList<SimpleUserObject> getFollowersFromUserId(int id);
+    @Nullable
     ArrayList<SimpleUserObject> getFollowsFromUserId(int id);
+    @Nullable
     ArrayList<CourseObject> getCourseListFromKeyword(String keyword);
+    int getCourseFollowersFromCourseID(int courseId);
+    ArrayList<UserToDo> getUserToDo(int userId);
+    ArrayList<SimpleUserObject> getRecationsFromTaskId(int id);
 }

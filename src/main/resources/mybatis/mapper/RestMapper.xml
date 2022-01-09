@@ -42,12 +42,25 @@
     </select>
 
     <select id="getFollowsFromUserId" resultType="com.example.everytask.model.dto.SimpleUserObject">
-        "SELECT id, name, email FROM user as A inner join follows as B ON A.id=B.to_id and B.from_id=#{id};"
+        SELECT id, name, email FROM user as A inner join follows as B ON A.id=B.to_id and B.from_id=#{id};
     </select>
 
     <select id="getCourseListFromKeyword" resultType="com.example.everytask.model.dto.CourseObject">
         SELECT * FROM course where course_name like CONCAT('%',#{keyword},'%') OR course_code like CONCAT('%',#{keyword},'%');
     </select>
+
+    <select id="getCourseFollowersFromCourseID" resultType="int">
+        SELECT COUNT(A.user_id) FROM takes as A inner join course as B ON A.course_id = B.id AND B.id = #{courseId};
+    </select>
+
+    <select id="getUserToDo" resultType="com.example.everytask.model.dto.UserToDo">
+        SELECT * FROM task where user_id = #{userId};
+    </select>
+
+    <select id="getRecationsFromTaskId" resultType="com.example.everytask.model.dto.SimpleUserObject">
+        SELECT A.id, A.name, A.email FROM user as A inner join likes as B on A.id=B.user_id and B.task_id = #{id};
+    </select>
+
 </mapper>
 
 <!--Mybatis 에서 Mapper Interface 제공-->
