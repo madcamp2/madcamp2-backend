@@ -89,7 +89,7 @@ public class RestService implements RestServiceInterface {
             return DefaultResponse.res(StatusCode.BAD_REQUEST, ResponseMessage.TOKEN_FAILED);
         }
 
-        UserResponseTransferObject.TokenInfo tokenInfo = jwtTokenProvider.generateToken(authentication);
+        UserResponseTransferObject.TokenInfo tokenInfo = jwtTokenProvider.updateToken(authentication, refreshToken);
 
         redisTemplate.opsForValue()
                 .set("RT:" + authentication.getName(), tokenInfo.getRefreshToken(), tokenInfo.getRefreshTokenExpirationTime(), TimeUnit.MILLISECONDS);
@@ -106,6 +106,7 @@ public class RestService implements RestServiceInterface {
         if (authentication.getName().equals("anonymousUser")){
             return DefaultResponse.res(StatusCode.NEED_REFRESH, ResponseMessage.REQUIRES_TOKEN_UPDATE);
         }
+
         int userId = restMapper.getIdFromUserEmail(authentication.getName());
         UserDetail userDetail = UserDetail.builder()
                 .email(authentication.getName())
@@ -114,7 +115,7 @@ public class RestService implements RestServiceInterface {
                 .followers(restMapper.getFollowersFromUserId(userId))
                 .follows(restMapper.getFollowsFromUserId(userId))
                 .build();
-        return DefaultResponse.res(StatusCode.OK, ResponseMessage.READ_USER, userDetail);
+        return DefaultResponse.res(StatusCode.OK, ResponseMessage.READ_USER, userId);
     }
 
 

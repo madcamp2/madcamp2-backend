@@ -6,11 +6,14 @@ import com.example.everytask.model.dto.UserRequestTransferObject;
 import com.example.everytask.model.formats.DefaultResponse;
 import com.example.everytask.model.formats.ResponseMessage;
 import com.example.everytask.model.formats.StatusCode;
+import com.example.everytask.service.KakaoSigninService;
 import com.example.everytask.service.RestServiceInterface;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 
 @RestController
@@ -18,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 public class restController {
 
     private final RestServiceInterface service;
+    private final KakaoSigninService kakaoSigninService;
 
     //로그인
     @PostMapping("user/sign-in")
@@ -52,9 +56,17 @@ public class restController {
         return service.searchCourse(keyword);
     }
 
+//745ffe68d06ddbf22efb96dc9fc84f47
     @GetMapping("user/todo")
-    public DefaultResponse getUserTodo(@RequestParam int id) {
+    public DefaultResponse getUserTodo(@RequestParam("id") int id) {
         return service.getUserToDo(id);
     }
+
+    @RequestMapping("user/kakao")
+    public String kakaoLogin(@RequestParam("code") String authorizationCode){
+        Map<String, Object> result = kakaoSigninService.execKakaoLogin(authorizationCode);
+        return "redirect:webauthcallback://success?customToken="+result.get("customToken").toString();
+    }
+
 }
 

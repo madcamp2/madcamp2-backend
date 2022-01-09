@@ -5,6 +5,7 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.el.parser.Token;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -26,7 +27,8 @@ public class JwtTokenProvider {
 
     private static final String AUTHORITIES_KEY = "auth";
     private static final String BEARER_TYPE = "Bearer";
-    private static final long ACCESS_TOKEN_EXPIRE_TIME = 7 * 24 * 60 * 60 * 1000L;
+    private static final long ACCESS_TOKEN_EXPIRE_TIME = 10 * 1000L;
+//    private static final long ACCESS_TOKEN_EXPIRE_TIME = 7 * 24 * 60 * 60 * 1000L;
     private static final long REFRESH_TOKEN_EXPIRE_TIME = 7 * 24 * 60 * 60 * 1000L;
 
     private final Key key;
@@ -44,12 +46,13 @@ public class JwtTokenProvider {
         long now = (new Date()).getTime();
         // Access Token 생성
         Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
-        String accessToken = Jwts.builder()
-                .setSubject(authentication.getName())
-                .claim(AUTHORITIES_KEY, authorities)
-                .setExpiration(accessTokenExpiresIn)
-                .signWith(key, SignatureAlgorithm.HS256)
-                .compact();
+//        String accessToken = Jwts.builder()
+//                .setSubject(authentication.getName())
+//                .claim(AUTHORITIES_KEY, authorities)
+//                .setExpiration(accessTokenExpiresIn)
+//                .signWith(key, SignatureAlgorithm.HS256)
+//                .compact();
+        String accessToken = createAccessToken(authentication);
 
         // Refresh Token 생성
         String refreshToken = Jwts.builder()
@@ -63,6 +66,25 @@ public class JwtTokenProvider {
                 .refreshToken(refreshToken)
                 .refreshTokenExpirationTime(REFRESH_TOKEN_EXPIRE_TIME)
                 .build();
+    }
+    public UserResponseTransferObject.TokenInfo updateToken(Authentication authentication, String refreshToken){
+        String newAccessToken = createAccessToken(authentication);
+        return UserResponseTransferObject.TokenInfo.builder()
+                .grantType(BEARER_TYPE)
+                .accessToken(newAccessToken)
+                .refreshToken(refreshToken)
+                .refreshTokenExpirationTime(REFRESH_TOKEN_EXPIRE_TIME)
+                .build();
+    }
+    public String createAccessToken(Authentication authentication){
+        long now = (new Date()).getTime();
+        String accessToken = Jwts.builder()
+                .setSubject(authentication.getName())
+                .claim(AUTHORITIES_KEY, createAuthorities(authentication))
+                .setExpiration(new Date(now + ACCESS_TOKEN_EXPIRE_TIME))
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
+        return accessToken;
     }
 
     // JWT 토큰을 복호화하여 토큰에 들어있는 정보를 꺼내는 메서드
