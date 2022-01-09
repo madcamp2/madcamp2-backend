@@ -71,7 +71,7 @@ public class restController {
     public String kakaoLogin(@RequestParam("code") String authorizationCode){
         String result = kakaoSigninService.execKakaoLogin(authorizationCode);
 //        return "redirect:webauthcallback://success?customToken="+result.get("customToken").toString();
-        return result;
+        return authorizationCode;
     }
 
 
