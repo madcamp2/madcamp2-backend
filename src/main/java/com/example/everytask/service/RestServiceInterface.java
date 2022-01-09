@@ -17,5 +17,6 @@ public interface RestServiceInterface {
     DefaultResponse refreshToken(UserRequestTransferObject.Reissue reissue);
     DefaultResponse searchCourse(String keyword);
     DefaultResponse getUserToDo(int userId);
+    DefaultResponse userLogOut();
 }
 

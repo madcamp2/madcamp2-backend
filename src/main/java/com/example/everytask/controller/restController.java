@@ -35,6 +35,11 @@ public class restController {
         return service.userSignUp(userSignUpForm);
     }
 
+    @GetMapping("user/log-out")
+    public DefaultResponse userLogOut(){
+        return service.userLogOut();
+    }
+
     //토큰 재발급
     @PostMapping("user/reissue")
     public DefaultResponse reissue(@RequestBody UserRequestTransferObject.Reissue reissue){

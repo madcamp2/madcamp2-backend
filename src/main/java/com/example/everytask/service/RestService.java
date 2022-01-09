@@ -97,6 +97,12 @@ public class RestService implements RestServiceInterface {
         return DefaultResponse.res(StatusCode.OK, ResponseMessage.TOKEN_UPDATED, tokenInfo);
     }
 
+    public DefaultResponse userLogOut(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        redisTemplate.opsForValue().set("RT:"+authentication.getName(), null);
+        return DefaultResponse.res(StatusCode.OK, ResponseMessage.LOGOUT_SUCCESS);
+    }
+
     public DefaultResponse userInfo(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null) {

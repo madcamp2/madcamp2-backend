@@ -27,7 +27,7 @@ public class JwtTokenProvider {
 
     private static final String AUTHORITIES_KEY = "auth";
     private static final String BEARER_TYPE = "Bearer";
-    private static final long ACCESS_TOKEN_EXPIRE_TIME = 10 * 1000L;
+    private static final long ACCESS_TOKEN_EXPIRE_TIME = 30 * 60 * 1000L;
 //    private static final long ACCESS_TOKEN_EXPIRE_TIME = 7 * 24 * 60 * 60 * 1000L;
     private static final long REFRESH_TOKEN_EXPIRE_TIME = 7 * 24 * 60 * 60 * 1000L;
 
@@ -46,12 +46,6 @@ public class JwtTokenProvider {
         long now = (new Date()).getTime();
         // Access Token 생성
         Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
-//        String accessToken = Jwts.builder()
-//                .setSubject(authentication.getName())
-//                .claim(AUTHORITIES_KEY, authorities)
-//                .setExpiration(accessTokenExpiresIn)
-//                .signWith(key, SignatureAlgorithm.HS256)
-//                .compact();
         String accessToken = createAccessToken(authentication);
 
         // Refresh Token 생성
