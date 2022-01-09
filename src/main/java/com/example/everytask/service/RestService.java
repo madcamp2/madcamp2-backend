@@ -99,7 +99,7 @@ public class RestService implements RestServiceInterface {
 
     public DefaultResponse userLogOut(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        redisTemplate.opsForValue().set("RT:"+authentication.getName(), null);
+        redisTemplate.opsForValue().set("", ""); //refresh token 비워줌
         return DefaultResponse.res(StatusCode.OK, ResponseMessage.LOGOUT_SUCCESS);
     }
 
@@ -121,7 +121,7 @@ public class RestService implements RestServiceInterface {
                 .followers(restMapper.getFollowersFromUserId(userId))
                 .follows(restMapper.getFollowsFromUserId(userId))
                 .build();
-        return DefaultResponse.res(StatusCode.OK, ResponseMessage.READ_USER, userId);
+        return DefaultResponse.res(StatusCode.OK, ResponseMessage.READ_USER, userDetail);
     }
 
 
