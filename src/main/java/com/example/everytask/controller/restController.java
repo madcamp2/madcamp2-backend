@@ -69,9 +69,11 @@ public class restController {
 
     @RequestMapping("user/kakao")
     public String kakaoLogin(@RequestParam("code") String authorizationCode){
-        Map<String, Object> result = kakaoSigninService.execKakaoLogin(authorizationCode);
-        return "redirect:webauthcallback://success?customToken="+result.get("customToken").toString();
+//        Map<String, Object> result = kakaoSigninService.execKakaoLogin(authorizationCode);
+//        return "redirect:webauthcallback://success?customToken="+result.get("customToken").toString();
+        return authorizationCode;
     }
+
 
 }
 
