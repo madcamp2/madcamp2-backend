@@ -47,16 +47,18 @@ public class RestService implements RestServiceInterface {
     }
 
     public DefaultResponse userSignUp(UserRequestTransferObject.SignUp signUpForm) {
-        if (restMapper.findByEmail(signUpForm.getEmail()) != null){
+        try {
+            UserObject userObject = UserObject.builder()
+                    .email(signUpForm.getEmail())
+                    .password(passwordEncoder.encode(signUpForm.getPassword()))
+                    .auth_type(signUpForm.getAuth_type())
+                    .name(nameCreate.randomName())
+                    .build();
+            restMapper.addUser(userObject);
+        } catch(Exception e) {
+            e.printStackTrace();
             return DefaultResponse.res(StatusCode.BAD_REQUEST, ResponseMessage.ALREADY_EXISTS);
         }
-        UserObject userObject = UserObject.builder()
-                .email(signUpForm.getEmail())
-                .password(passwordEncoder.encode(signUpForm.getPassword()))
-                .auth_type(signUpForm.getAuth_type())
-                .name(nameCreate.randomName())
-                .build();
-        restMapper.addUser(userObject);
         return DefaultResponse.res(StatusCode.OK, ResponseMessage.CREATED_USER);
     }
 
