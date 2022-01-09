@@ -15,10 +15,11 @@ import java.util.Map;
 
 @Service
 public class KakaoSigninService {
-    public Map<String, Object> execKakaoLogin(String authorizationCode){
+    public String execKakaoLogin(String authorizationCode){
         String accessToken = getAccessTokenFromKakaoServer(authorizationCode);
-        Map<String, Object> userInfo = getUserInfo(accessToken);
-        return userInfo;
+//        Map<String, Object> userInfo = getUserInfo(accessToken);
+//        Map<String, Object>
+        return accessToken;
     }
 
     public String getAccessTokenFromKakaoServer (String authorizationCode) {
@@ -26,7 +27,7 @@ public class KakaoSigninService {
         String refresh_Token = "";
         String reqURL = "https://kauth.kakao.com/oauth/token";
         String restApiKey = "745ffe68d06ddbf22efb96dc9fc84f47";
-        String redirectUri = "http://192.249.18.137/user/kakao";
+        String redirectUri = "http://192.249.18.137/user/kakao"; //?
 
         try {
             URL url = new URL(reqURL);
