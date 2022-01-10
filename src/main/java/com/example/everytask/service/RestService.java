@@ -36,14 +36,24 @@ public class RestService implements RestServiceInterface {
     private final NameCreate nameCreate;
 
     @Override
-    public List<UserObject> getAllUserList(){
-        //service 가 mapper 호출
-        return restMapper.getAllUserList();
-    }
-
-    @Override
     public UserObject getSingleUser(int userId) {
         return restMapper.getSingleUser(userId);
+    }
+
+    public DefaultResponse userSignIn(@Validated UserRequestTransferObject.SignIn signInForm){
+        if (restMapper.findByEmail(signInForm.getEmail()) == null) {
+            return DefaultResponse.res(StatusCode.NOT_FOUND, ResponseMessage.NOT_FOUND_USER);
+        }
+
+        UsernamePasswordAuthenticationToken authenticationToken = signInForm.toAuthenticationObject();
+        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+
+        UserResponseTransferObject.TokenInfo tokenInfo = jwtTokenProvider.generateToken(authentication);
+
+        redisTemplate.opsForValue()
+                .set("RT:"+authentication.getName(), tokenInfo.getRefreshToken(), tokenInfo.getRefreshTokenExpirationTime(), TimeUnit.MILLISECONDS);
+
+        return DefaultResponse.res(StatusCode.OK, ResponseMessage.LOGIN_SUCCESS, tokenInfo);
     }
 
     public DefaultResponse userSignUp(UserRequestTransferObject.SignUp signUpForm) {
@@ -62,20 +72,14 @@ public class RestService implements RestServiceInterface {
         return DefaultResponse.res(StatusCode.OK, ResponseMessage.CREATED_USER);
     }
 
-    public DefaultResponse userSignIn(@Validated UserRequestTransferObject.SignIn signInForm){
-        if (restMapper.findByEmail(signInForm.getEmail()) == null) {
-            return DefaultResponse.res(StatusCode.NOT_FOUND, ResponseMessage.NOT_FOUND_USER);
+    public DefaultResponse userLogOut(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.getName() == null || restMapper.findByEmail(authentication.getName()) == null){
+            return DefaultResponse.res(StatusCode.BAD_REQUEST, ResponseMessage.LOGOUT_FAIL);
         }
-
-        UsernamePasswordAuthenticationToken authenticationToken = signInForm.toAuthenticationObject();
-        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-
-        UserResponseTransferObject.TokenInfo tokenInfo = jwtTokenProvider.generateToken(authentication);
-
-        redisTemplate.opsForValue()
-                .set("RT:"+authentication.getName(), tokenInfo.getRefreshToken(), tokenInfo.getRefreshTokenExpirationTime(), TimeUnit.MILLISECONDS);
-
-        return DefaultResponse.res(StatusCode.OK, ResponseMessage.LOGIN_SUCCESS, tokenInfo);
+        SecurityContextHolder.clearContext();
+        redisTemplate.opsForValue().set("", ""); //refresh token 비워줌
+        return DefaultResponse.res(StatusCode.OK, ResponseMessage.LOGOUT_SUCCESS);
     }
 
     public DefaultResponse reissue(UserRequestTransferObject.Reissue reissue) {
@@ -99,11 +103,7 @@ public class RestService implements RestServiceInterface {
         return DefaultResponse.res(StatusCode.OK, ResponseMessage.TOKEN_UPDATED, tokenInfo);
     }
 
-    public DefaultResponse userLogOut(){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        redisTemplate.opsForValue().set("", ""); //refresh token 비워줌
-        return DefaultResponse.res(StatusCode.OK, ResponseMessage.LOGOUT_SUCCESS);
-    }
+
 
     public DefaultResponse userInfo(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -124,22 +124,6 @@ public class RestService implements RestServiceInterface {
                 .follows(restMapper.getFollowsFromUserId(userId))
                 .build();
         return DefaultResponse.res(StatusCode.OK, ResponseMessage.READ_USER, userDetail);
-    }
-
-
-    public DefaultResponse refreshToken(UserRequestTransferObject.Reissue reissue){
-        RefreshTokenMapping refreshTokenMapping;
-        //1. Expiration이 0보다 작은 경우. 즉 access token이 만료된 경우
-        if (jwtTokenProvider.getExpiration(reissue.getAccessToken()) < 0) {
-            //2. Refreshtoken을 저장한 테이블에 refreshtoken이 있는지 확인
-            refreshTokenMapping = restMapper.isThereRefreshToken(reissue.getRefreshToken());
-            if (refreshTokenMapping == null){
-                //3-1. Refreshtoken이 없으면 로그인을 다시 해야 하는 유저거나 없던 유저
-                return DefaultResponse.res(111, "boom");
-            }
-            //3-2. RefreshToken이 있으면 이를 기반으로 다시 accesstoken을 만들어줘야 함.
-        }
-        return DefaultResponse.res(111, "boom");
     }
 
     public DefaultResponse searchCourse(String keyword) {
