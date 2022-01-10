@@ -4,22 +4,33 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.net.http.HttpHeaders;
 import java.util.HashMap;
 import java.util.Map;
 
 @Service
 public class KakaoSigninService {
-    public Map<String, Object> execKakaoLogin(String authorizationCode){
+    public void execKakaoLogin(String authorizationCode){
         String accessToken = getAccessTokenFromKakaoServer(authorizationCode);
         Map<String, Object> userInfo = getUserInfo(accessToken);
-        return userInfo;
     }
+
+//    public void getAccessToken(String code){
+//        WebClient webClient = WebClient
+//                        .builder()
+//                        .baseUrl("dd")
+//                        .defaultHeader("Content-type", "application/x-www-form-urlencoded; charset=utf-8")
+//                        .build();
+//        webClient.post()
+//    }
 
     public String getAccessTokenFromKakaoServer (String authorizationCode) {
         String access_Token = "";
