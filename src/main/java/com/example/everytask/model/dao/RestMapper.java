@@ -14,24 +14,20 @@ import java.util.Optional;
 @Repository
 @org.apache.ibatis.annotations.Mapper
 public interface RestMapper {
-    List<UserObject> getAllUserList();
-    UserObject getSingleUser(int userId);
-    UserObject findByEmail(String email);
+    @Nullable List<UserObject> getAllUserList();
+    @Nullable UserObject getSingleUser(int userId);
+    @Nullable UserObject findByEmail(String email);
     void addUser(@Param("item")UserObject userObject);
-    RefreshTokenMapping isThereRefreshToken(String refreshToken);
+    @Nullable RefreshTokenMapping isThereRefreshToken(String refreshToken);
     int getIdFromUserEmail(String email);
-    String getNameFromUserID(int id);
-    String getNameFromOrgID(int id);
-    @Nullable
-    ArrayList<Organization> getOrgsFromUserId(int id);
-    @Nullable
-    ArrayList<SimpleUserObject> getFollowersFromUserId(int id);
-    @Nullable
-    ArrayList<SimpleUserObject> getFollowsFromUserId(int id);
-    @Nullable
-    ArrayList<CourseObject> getCourseListFromKeyword(String keyword);
+    @Nullable String getNameFromUserID(int id);
+    @Nullable String getNameFromOrgID(int id);
+    @Nullable ArrayList<Organization> getOrgsFromUserId(int id);
+    @Nullable ArrayList<SimpleUserObject> getFollowersFromUserId(int id);
+    @Nullable ArrayList<SimpleUserObject> getFollowsFromUserId(int id);
+    @Nullable ArrayList<CourseObject> getCourseListFromKeyword(String keyword);
     int getCourseFollowersFromCourseID(int courseId);
-    ArrayList<UserToDo> getUserToDo(int userId);
-    ArrayList<SimpleUserObject> getRecationsFromTaskId(int id);
+    @Nullable ArrayList<UserToDo> getUserToDo(int userId);
+    @Nullable ArrayList<SimpleUserObject> getRecationsFromTaskId(int id);
     int findKakaoId(String kakaoId);
 }
