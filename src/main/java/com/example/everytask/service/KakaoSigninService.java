@@ -15,11 +15,10 @@ import java.util.Map;
 
 @Service
 public class KakaoSigninService {
-    public String execKakaoLogin(String authorizationCode){
+    public Map<String, Object> execKakaoLogin(String authorizationCode){
         String accessToken = getAccessTokenFromKakaoServer(authorizationCode);
-//        Map<String, Object> userInfo = getUserInfo(accessToken);
-//        Map<String, Object>
-        return accessToken;
+        Map<String, Object> userInfo = getUserInfo(accessToken);
+        return userInfo;
     }
 
     public String getAccessTokenFromKakaoServer (String authorizationCode) {
@@ -43,7 +42,7 @@ public class KakaoSigninService {
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
             StringBuilder sb = new StringBuilder();
             sb.append("grant_type=authorization_code");
-            sb.append("&client_id=["+restApiKey+"]");  //본인이 발급받은 key
+            sb.append("&client_id="+restApiKey);  //본인이 발급받은 key
 
 // 설정 redirect_uri 는 카카오에 등록된 경로를 작성하면 된다.
             sb.append("&redirect_uri="+redirectUri); // 본인이 설정해 놓은 경로
