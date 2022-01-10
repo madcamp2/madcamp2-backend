@@ -35,12 +35,6 @@ public class RestController {
         return service.userSignIn(userSignInForm);
     }
 
-    @PostMapping("user/kakao/sign-in")
-    public DefaultResponse kakaoUserSignIn(KakaoSigninForm kakaoSigninForm){
-        logger.info("으아아ㅏ앙아아!");
-        return service.kakaoLogin(kakaoSigninForm);
-    }
-
     @PostMapping("user/sign-up")
     public DefaultResponse userSignUp(@RequestBody UserRequestTransferObject.SignUp userSignUpForm){
         return service.userSignUp(userSignUpForm);
