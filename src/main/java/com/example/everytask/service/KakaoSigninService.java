@@ -36,7 +36,7 @@ public class KakaoSigninService {
         String access_Token = "";
         String refresh_Token = "";
         String reqURL = "https://kauth.kakao.com/oauth/token";
-        String restApiKey = "745ffe68d06ddbf22efb96dc9fc84f47";
+        String restApiKey = "3aa4c33ed10dedb1370b869ac5575329";
         String redirectUri = "http://192.249.18.137/user/kakao"; //?
 
         try {

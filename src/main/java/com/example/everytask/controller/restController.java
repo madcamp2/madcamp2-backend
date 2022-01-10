@@ -73,7 +73,7 @@ public class restController {
 //        return "redirect:webauthcallback://success?customToken="+result.get("customToken").toString();
 //        return "redirect:webauthcallback://success?customToken="+currentToken;
 //        return "redirect:kakaocc69a0dc9f878280d4bd6b1f87a1dadb://success?customToken="+currentToken;
-        return "redirect:kakaocc69a0dc9f878280d4bd6b1f87a1dadb://success?customToken="+code;
+        return "AUTHCODE :: "+code + "   ACCESSTOKEN :: "+currentToken;
     }
 
 
