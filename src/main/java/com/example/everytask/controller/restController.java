@@ -9,6 +9,8 @@ import com.example.everytask.model.formats.StatusCode;
 import com.example.everytask.service.KakaoSigninService;
 import com.example.everytask.service.RestServiceInterface;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +24,7 @@ public class restController {
 
     private final RestServiceInterface service;
     private final KakaoSigninService kakaoSigninService;
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     //로그인
     @PostMapping("user/sign-in")
@@ -69,6 +72,7 @@ public class restController {
 
     @RequestMapping("user/kakao")
     public String kakaoLogin(@RequestParam("code") String code){
+        logger.info("으아아아아아아아아아아!!!");
         String currentToken = kakaoSigninService.getAccessTokenFromKakaoServer(code);
 //        return "redirect:webauthcallback://success?customToken="+result.get("customToken").toString();
 //        return "redirect:webauthcallback://success?customToken="+currentToken;
