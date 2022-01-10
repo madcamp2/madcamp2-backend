@@ -73,6 +73,7 @@ public class RestController {
 
     @PostMapping("user/kakao/sign-in")
     public DefaultResponse kakaoUserLogin(@RequestBody KakaoSigninForm kakaoSigninForm){
+        logger.info("으아아아아아아");
         return service.kakaoLogin(kakaoSigninForm);
     }
 }
