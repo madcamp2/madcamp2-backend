@@ -62,7 +62,7 @@
     </select>
 
     <select id="findKakaoId" resultType="int">
-        SELECT COUNT(*) FROM USER WHERE email = #{kakaoId};
+        SELECT COUNT(*) FROM user WHERE email = #{kakaoId};
     </select>
 
 
