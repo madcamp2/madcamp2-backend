@@ -17,7 +17,7 @@ public class SwaggerConfig {
     @Bean
     public Docket restAPI() {
         return new Docket(DocumentationType.SWAGGER_2)
-                .useDefaultResponseMessages(true) //use default response types
+                .useDefaultResponseMessages(false) //use default response types
                 .apiInfo(apiInfo())
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.example.everytask"))

@@ -4,9 +4,13 @@ package com.example.everytask.controller;
 import com.example.everytask.model.dto.KakaoSigninForm;
 import com.example.everytask.model.dto.UserRequestTransferObject;
 import com.example.everytask.model.formats.DefaultResponse;
+import com.example.everytask.model.formats.ResponseMessage;
+import com.example.everytask.model.formats.StatusCode;
 import com.example.everytask.service.RestServiceInterface;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,8 +26,10 @@ public class RestController {
 
     private final RestServiceInterface service;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    @ApiOperation(value="", notes="")
-    @ApiImplicitParam()
+    @ApiOperation(value="어플리케이션 회원가입", notes="이메일과 비밀번호를 받아 랜덤한 이름으로 회원가입이 진행됩니다. Auth_type은 'APP'이어야 합니다.")
+    @ApiResponses({
+            @ApiResponse(code= StatusCode.OK, message = ResponseMessage.CREATED_USER)
+    })
     @PostMapping("user/sign-in")
     public DefaultResponse userSignIn(@RequestBody UserRequestTransferObject.SignIn userSignInForm) {
         return service.userSignIn(userSignInForm);
