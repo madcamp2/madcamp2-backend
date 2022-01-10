@@ -61,6 +61,11 @@
         SELECT A.id, A.name, A.email FROM user as A inner join likes as B on A.id=B.user_id and B.task_id = #{id};
     </select>
 
+    <select id="findKakaoId" resultType="int">
+        SELECT COUNT(*) FROM USER WHERE email = #{kakaoId};
+    </select>
+
+
 </mapper>
 
 <!--Mybatis 에서 Mapper Interface 제공-->

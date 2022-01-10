@@ -1,5 +1,6 @@
 package com.example.everytask.service;
 
+import com.example.everytask.model.dto.KakaoSigninForm;
 import com.example.everytask.model.dto.UserObject;
 import com.example.everytask.model.dto.UserRequestTransferObject;
 import com.example.everytask.model.dto.UserSignUpForm;
@@ -18,5 +19,6 @@ public interface RestServiceInterface {
     DefaultResponse searchCourse(String keyword);
     DefaultResponse getUserToDo(int userId);
     DefaultResponse userLogOut();
+    DefaultResponse kakaoLogin(KakaoSigninForm kakaoSigninForm);
 }
 

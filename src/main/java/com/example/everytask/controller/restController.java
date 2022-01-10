@@ -1,6 +1,7 @@
 package com.example.everytask.controller;
 
 
+import com.example.everytask.model.dto.KakaoSigninForm;
 import com.example.everytask.model.dto.UserObject;
 import com.example.everytask.model.dto.UserRequestTransferObject;
 import com.example.everytask.model.formats.DefaultResponse;
@@ -30,6 +31,11 @@ public class restController {
     @PostMapping("user/sign-in")
     public DefaultResponse userSignIn(@RequestBody UserRequestTransferObject.SignIn userSignInForm) {
         return service.userSignIn(userSignInForm);
+    }
+
+    @PostMapping("user/kakao/signin")
+    public DefaultResponse kakaoUserSignIn(KakaoSigninForm kakaoSigninForm){
+        return service.kakaoLogin(kakaoSigninForm);
     }
 
     //회원가입
@@ -64,7 +70,6 @@ public class restController {
         return service.searchCourse(keyword);
     }
 
-//745ffe68d06ddbf22efb96dc9fc84f47
     @GetMapping("user/todo")
     public DefaultResponse getUserTodo(@RequestParam("id") int id) {
         return service.getUserToDo(id);
@@ -74,12 +79,12 @@ public class restController {
     public String kakaoLogin(@RequestParam("code") String code){
         logger.info("으아아아아아아아아아아!!!");
         String currentToken = kakaoSigninService.getAccessTokenFromKakaoServer(code);
-//        return "redirect:webauthcallback://success?customToken="+result.get("customToken").toString();
-//        return "redirect:webauthcallback://success?customToken="+currentToken;
-//        return "redirect:kakaocc69a0dc9f878280d4bd6b1f87a1dadb://success?customToken="+currentToken;
         return "AUTHCODE :: "+code + "   ACCESSTOKEN :: "+currentToken;
     }
 
-
+    @PostMapping("user/kakao/sign-in")
+    public DefaultResponse kakaoUserLogin(@RequestBody KakaoSigninForm kakaoSigninForm){
+        return service.kakaoLogin(kakaoSigninForm);
+    }
 }
 

@@ -171,4 +171,32 @@ public class RestService implements RestServiceInterface {
         return DefaultResponse.res(StatusCode.OK, ResponseMessage.RESULT_FOUND, userTasks);
     }
 
+    public DefaultResponse kakaoLogin(KakaoSigninForm kakaoSigninForm){
+        String stringId = kakaoSigninForm.getKakaoId() + "@kakao.co.kr";
+        String userPasswd = kakaoSigninForm.getKakaoId() + "rand";
+        if (restMapper.findKakaoId(stringId) <= 0) {
+            //없는 회원인 경우 새로 가입
+            try {
+                UserObject userObject = UserObject.builder()
+                        .email(stringId)
+                        .password(passwordEncoder.encode(userPasswd))
+                        .auth_type("KAKAO")
+                        .name(nameCreate.randomName())
+                        .build();
+                restMapper.addUser(userObject);
+            } catch(Exception e) {
+                e.printStackTrace();
+                return DefaultResponse.res(StatusCode.BAD_REQUEST, ResponseMessage.ALREADY_EXISTS);
+            }
+        }
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(stringId, userPasswd);
+        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+
+        UserResponseTransferObject.TokenInfo tokenInfo = jwtTokenProvider.generateToken(authentication);
+        redisTemplate.opsForValue()
+                .set("RT:"+authentication.getName(), tokenInfo.getRefreshToken(), tokenInfo.getRefreshTokenExpirationTime(), TimeUnit.MILLISECONDS);
+
+        return DefaultResponse.res(StatusCode.OK, ResponseMessage.LOGIN_SUCCESS, tokenInfo);
+    }
+
 }

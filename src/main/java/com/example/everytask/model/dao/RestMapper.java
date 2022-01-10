@@ -33,4 +33,5 @@ public interface RestMapper {
     int getCourseFollowersFromCourseID(int courseId);
     ArrayList<UserToDo> getUserToDo(int userId);
     ArrayList<SimpleUserObject> getRecationsFromTaskId(int id);
+    int findKakaoId(String kakaoId);
 }
