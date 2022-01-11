@@ -68,7 +68,7 @@ root@camp-3:~# sudo systemctl status everyTask.service
 
 ### 3. Database
 
-![스크린샷 2022-01-11 오후 9.11.55.png](MadCamp%20%E2%80%94%202%201a3a0c18cee84438bb453a6094f6315a/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2022-01-11_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_9.11.55.png)
+![https://github.com/madcamp2/madcamp2-backend/blob/main/folder/database.png](https://github.com/madcamp2/madcamp2-backend/blob/main/folder/database.png)
 
 ## 4. Functionality & Implementation
 
@@ -99,7 +99,7 @@ if (restMapper.findKakaoId(stringId) <= 0) {
 
 자체적으로 생성된 계정은 이메일과 비밀번호를 기반으로 암호화되며, 이후 비밀번호는 단방향 복호화 과정을 거쳐 데이터베이스에 등록된다. 이렇게 데이터베이스에 등록된 암호는 Spring Security기반으로 유저의 토큰에 담긴 정보와 함께 인증 절차에 사용된다.
 
-![Untitled](MadCamp%20%E2%80%94%202%201a3a0c18cee84438bb453a6094f6315a/Untitled.png)
+![https://github.com/madcamp2/madcamp2-backend/blob/main/folder/database2.png](https://github.com/madcamp2/madcamp2-backend/blob/main/folder/database2.png)
 
 ### 과목 검색
 
