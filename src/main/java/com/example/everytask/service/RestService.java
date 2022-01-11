@@ -183,4 +183,54 @@ public class RestService implements RestServiceInterface {
         return DefaultResponse.res(StatusCode.OK, ResponseMessage.LOGIN_SUCCESS, tokenInfo);
     }
 
+    public DefaultResponse showPopularUsers(int num){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.getName() == null || restMapper.findByEmail(authentication.getName()) == null){
+            return DefaultResponse.res(StatusCode.BAD_REQUEST, ResponseMessage.LOGIN_REQUIRED);
+        }
+        String currentName = authentication.getName();
+        int currentId = restMapper.getIdFromUserEmail(currentName);
+        ArrayList<SortedUserView> sortedUserView = restMapper.getSortedPopularView(num, currentId, currentName);
+        return DefaultResponse.res(StatusCode.OK, ResponseMessage.RESULT_FOUND, currentId);
+    }
+
+    public DefaultResponse showPopularCourses(int num){
+        ArrayList<SortedCourseView> sortedCourseView = restMapper.getSortedPopularCourseView(num, 2021);
+        return DefaultResponse.res(StatusCode.OK, ResponseMessage.RESULT_FOUND, sortedCourseView);
+    }
+
+    public DefaultResponse modifyTask(int taskId, TaskDescription taskDescription){
+        restMapper.modifyTask(taskId, taskDescription.getDescription());
+        return DefaultResponse.res(StatusCode.OK, ResponseMessage.MODIFIED);
+    }
+
+    public DefaultResponse deleteTask(int taskId){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.getName() == null || restMapper.findByEmail(authentication.getName()) == null){
+            return DefaultResponse.res(StatusCode.UNAUTHORIZED, ResponseMessage.DENIED);
+        }
+        UserObject owner = restMapper.findByEmail(authentication.getName());
+        restMapper.deleteTask(taskId, owner.getId());
+        return DefaultResponse.res(StatusCode.OK, ResponseMessage.DELETED);
+    }
+
+    public DefaultResponse retrieveTaskByDate(int user_id, int year, int month, int date){
+        String dateString = year+"-";
+        dateString += (month < 10) ? "0"+month+"-" : month+"-";
+        dateString += (date < 10) ? "0"+date+"" : date+"";
+        ArrayList<TaskView> searchResult = restMapper.retrieveTaskByDate(user_id, dateString);
+        if (searchResult == null){
+            return DefaultResponse.res(StatusCode.NO_CONTENT, ResponseMessage.RESULT_NON_FOUND);
+        }
+        return DefaultResponse.res(StatusCode.OK, ResponseMessage.RESULT_FOUND, searchResult);
+    }
+
+    public DefaultResponse getIdFromToken(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.getName() == null || restMapper.findByEmail(authentication.getName()) == null){
+            return DefaultResponse.res(StatusCode.UNAUTHORIZED, ResponseMessage.DENIED);
+        }
+        int myId = restMapper.getIdFromUserEmail(authentication.getName());
+        return DefaultResponse.res(StatusCode.OK, ResponseMessage.READ_USER, myId);
+    }
 }

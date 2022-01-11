@@ -13,6 +13,8 @@ import java.util.ArrayList;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserDetail {
+    @ApiModelProperty(example = "1")
+    private int id;
     @ApiModelProperty(example = "awwsb41@gmail.com")
     private String email;
     @ApiModelProperty(example = "배고픈 호랑이")

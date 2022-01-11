@@ -1,6 +1,7 @@
 package com.example.everytask.service;
 
 import com.example.everytask.model.dto.KakaoSigninForm;
+import com.example.everytask.model.dto.TaskDescription;
 import com.example.everytask.model.dto.UserObject;
 import com.example.everytask.model.dto.UserRequestTransferObject;
 import com.example.everytask.model.formats.DefaultResponse;
@@ -17,5 +18,11 @@ public interface RestServiceInterface {
     DefaultResponse getUserToDo(int userId);
     DefaultResponse userLogOut();
     DefaultResponse kakaoLogin(KakaoSigninForm kakaoSigninForm);
+    DefaultResponse showPopularUsers(int num);
+    DefaultResponse showPopularCourses(int num);
+    DefaultResponse modifyTask(int taskId, TaskDescription taskDescription);
+    DefaultResponse deleteTask(int taskId);
+    DefaultResponse retrieveTaskByDate(int user_id, int year, int month, int date);
+    DefaultResponse getIdFromToken();
 }
 

@@ -19,4 +19,8 @@ public class ResponseMessage {
     public static final String ALREADY_EXISTS = "이미 존재하는 회원입니다";
     public static final String RESULT_FOUND = "쿼리 결과가 존재합니다.";
     public static final String RESULT_NON_FOUND = "쿼리 결과가 존재하지 않습니다.";
+    public static final String LOGIN_REQUIRED = "로그아웃된 상태입니다.";
+    public static final String MODIFIED = "수정되었습니다.";
+    public static final String DENIED = "권한이 없습니다.";
+    public static final String DELETED = "삭제되었습니다.";
 }

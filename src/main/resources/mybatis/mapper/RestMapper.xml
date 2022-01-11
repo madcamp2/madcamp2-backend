@@ -65,7 +65,27 @@
         SELECT COUNT(*) FROM user WHERE email = #{kakaoId};
     </select>
 
+    <select id="getSortedPopularView" resultType="com.example.everytask.model.dto.SortedUserView">
+        select A.id, A.name, count(B.to_id) as followers from user as A inner join follows as B on B.to_id=A.id
+        WHERE A.name != #{currentName} and A.id not in (select to_id from follows where from_id = #{currentId}) GROUP BY A.id, A.name ORDER BY followers DESC LIMIT #{num};
+    </select>
 
+    <select id="getSortedPopularCourseView" resultType="com.example.everytask.model.dto.SortedCourseView">
+        select A.id as course_id, A.course_name, count(B.course_id) as followers from course as A inner join takes as B on B.course_id=A.id
+        WHERE A.year = #{year} GROUP BY A.id, A.course_name ORDER BY followers DESC LIMIT #{num};
+    </select>
+
+    <update id="modifyTask">
+        UPDATE task SET contents = #{contents} WHERE id=#{num};
+    </update>
+
+    <delete id="deleteTask">
+        DELETE FROM task WHERE id = #{task_id} AND user_id = #{user_id};
+    </delete>
+
+    <select id="retrieveTaskByDate" resultType="com.example.everytask.model.dto.TaskView">
+        SELECT * FROM task WHERE user_id = #{user_id} AND date = #{dateString};
+    </select>
 </mapper>
 
 <!--Mybatis 에서 Mapper Interface 제공-->

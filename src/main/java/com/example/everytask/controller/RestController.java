@@ -2,6 +2,7 @@ package com.example.everytask.controller;
 
 
 import com.example.everytask.model.dto.KakaoSigninForm;
+import com.example.everytask.model.dto.TaskDescription;
 import com.example.everytask.model.dto.UserRequestTransferObject;
 import com.example.everytask.model.dto.UserResponseTransferObject;
 import com.example.everytask.model.formats.DefaultResponse;
@@ -13,13 +14,9 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
-import org.apache.el.parser.Token;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @org.springframework.web.bind.annotation.RestController
@@ -114,6 +111,37 @@ public class RestController {
     @PostMapping("user/kakao/sign-in")
     public DefaultResponse kakaoUserLogin(@RequestBody KakaoSigninForm kakaoSigninForm){
         return service.kakaoLogin(kakaoSigninForm);
+    }
+
+    @GetMapping("user/sort")
+    public DefaultResponse showPopularUsers(@RequestParam("num") int num) {
+        return service.showPopularUsers(num);
+    }
+
+    @GetMapping("subject/sort")
+    public DefaultResponse showPopularCourses(@RequestParam("num") int num){
+        return service.showPopularCourses(num);
+    }
+
+    @PutMapping("task/modify/description/{id}")
+    public DefaultResponse changeTaskDescription(@PathVariable("id") int id, @RequestBody TaskDescription taskDescription){
+        return service.modifyTask(id, taskDescription);
+    }
+
+    @DeleteMapping("task/delete/{id}")
+    public DefaultResponse deleteTask(@PathVariable("id") int id){
+        logger.info("엥?");
+        return service.deleteTask(id);
+    }
+
+    @GetMapping("task/date")
+    public DefaultResponse retrieveTaskByDate(@RequestParam("id") int user_id, @RequestParam("year") int year, @RequestParam("month") int month, @RequestParam("day") int day){
+        return service.retrieveTaskByDate(user_id, year, month, day);
+    }
+
+    @GetMapping("user/get-id")
+    public DefaultResponse getIdFromToken(){
+        return service.getIdFromToken();
     }
 }
 

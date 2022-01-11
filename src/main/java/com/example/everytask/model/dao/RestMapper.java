@@ -28,4 +28,9 @@ public interface RestMapper {
     @Nullable ArrayList<UserToDo> getUserToDo(int userId);
     @Nullable ArrayList<SimpleUserObject> getRecationsFromTaskId(int id);
     int findKakaoId(String kakaoId);
+    @Nullable ArrayList<SortedUserView> getSortedPopularView(int num, int currentId, String currentName);
+    @Nullable ArrayList<SortedCourseView> getSortedPopularCourseView(int num, int year);
+    @Nullable void modifyTask(int num, String contents);
+    @Nullable void deleteTask(int task_id, int user_id);
+    @Nullable ArrayList<TaskView> retrieveTaskByDate(int user_id, String dateString);
 }
