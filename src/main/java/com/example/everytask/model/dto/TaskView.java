@@ -14,4 +14,6 @@ public class TaskView {
     private String contents;
     private boolean done;
     private String date;
+    private String course_name;
+    private int task_likes;
 }

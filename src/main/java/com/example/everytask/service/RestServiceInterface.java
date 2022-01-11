@@ -24,5 +24,7 @@ public interface RestServiceInterface {
     DefaultResponse deleteTask(int taskId);
     DefaultResponse retrieveTaskByDate(int user_id, int year, int month, int date);
     DefaultResponse getIdFromToken();
+    DefaultResponse followCourse(int course_id);
+    DefaultResponse likeTask(int task_id);
 }
 

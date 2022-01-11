@@ -86,6 +86,39 @@
     <select id="retrieveTaskByDate" resultType="com.example.everytask.model.dto.TaskView">
         SELECT * FROM task WHERE user_id = #{user_id} AND date = #{dateString};
     </select>
+
+    <select id="findIsUserFollowingCourse" resultType="int">
+        SELECT COUNT(*) FROM takes WHERE user_id = #{user_id} AND course_id = #{course_id}
+    </select>
+
+    <insert id="followCourse">
+        INSERT INTO takes VALUES(#{user_id}, #{course_id});
+    </insert>
+
+    <delete id="unFollowCourse">
+        DELETE FROM takes WHERE user_id = #{user_id} AND course_id = #{course_id};
+    </delete>
+
+    <select id="findCourseName" resultType="String">
+        SELECT course_name FROM course WHERE id = #{course_id} LIMIT 1;
+    </select>
+
+    <select id="findIsUserLikesTask" resultType="int">
+        SELECT count(*) from likes WHERE user_id = #{user_id} and task_id = #{task_id};
+    </select>
+
+    <select id="findTaskLikes" resultType="int">
+        SELECT count(*) from likes WHERE task_id = #{task_id};
+    </select>
+
+    <insert id="likesTask">
+        INSERT INTO likes VALUES(#{user_id}, #{task_id});
+    </insert>
+
+    <delete id="unLikesTask">
+        DELETE FROM likes WHERE user_id=#{user_id} AND task_id = #{task_id};
+    </delete>
+
 </mapper>
 
 <!--Mybatis 에서 Mapper Interface 제공-->

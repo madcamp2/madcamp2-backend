@@ -134,7 +134,7 @@ public class RestController {
         return service.deleteTask(id);
     }
 
-    @GetMapping("task/date")
+    @GetMapping("task/date") //!!
     public DefaultResponse retrieveTaskByDate(@RequestParam("id") int user_id, @RequestParam("year") int year, @RequestParam("month") int month, @RequestParam("day") int day){
         return service.retrieveTaskByDate(user_id, year, month, day);
     }
@@ -143,5 +143,18 @@ public class RestController {
     public DefaultResponse getIdFromToken(){
         return service.getIdFromToken();
     }
+
+    @GetMapping("course/follow")
+    public DefaultResponse followCourse(@RequestParam("course_id") int course_id){
+        return service.followCourse(course_id);
+    }
+
+    @GetMapping("task/like")
+    public DefaultResponse likeTask(@RequestParam("task_id") int task_id){
+        logger.info("dpd??");
+        return service.likeTask(task_id);
+    }
+
+
 }
 

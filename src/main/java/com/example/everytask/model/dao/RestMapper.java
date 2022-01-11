@@ -33,4 +33,12 @@ public interface RestMapper {
     @Nullable void modifyTask(int num, String contents);
     @Nullable void deleteTask(int task_id, int user_id);
     @Nullable ArrayList<TaskView> retrieveTaskByDate(int user_id, String dateString);
+    @Nullable int  findIsUserFollowingCourse(int user_id, int course_id);
+    @Nullable void followCourse(int user_id, int course_id);
+    @Nullable void unFollowCourse(int user_id, int course_id);
+    @Nullable String findCourseName(int course_id);
+    @Nullable int findTaskLikes(int task_id);
+    @Nullable int findIsUserLikesTask(int user_id, int task_id);
+    @Nullable void likesTask(int user_id, int task_id);
+    @Nullable void unLikesTask(int user_id, int task_id);
 }

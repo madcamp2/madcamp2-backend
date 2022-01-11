@@ -159,7 +159,6 @@ public class RestService implements RestServiceInterface {
         String stringId = kakaoSigninForm.getKakaoId() + "@kakao.co.kr";
         String userPasswd = kakaoSigninForm.getKakaoId() + "rand";
         if (restMapper.findKakaoId(stringId) <= 0) {
-            //없는 회원인 경우 새로 가입
             try {
                 UserObject userObject = UserObject.builder()
                         .email(stringId)
@@ -222,6 +221,12 @@ public class RestService implements RestServiceInterface {
         if (searchResult == null){
             return DefaultResponse.res(StatusCode.NO_CONTENT, ResponseMessage.RESULT_NON_FOUND);
         }
+        for(int i = 0; i < searchResult.size(); i++){
+            int course_id = searchResult.get(i).getCourse_id();
+            int task_id = searchResult.get(i).getId();
+            searchResult.get(i).setCourse_name(restMapper.findCourseName(course_id));
+            searchResult.get(i).setTask_likes(restMapper.findTaskLikes(task_id));
+        }
         return DefaultResponse.res(StatusCode.OK, ResponseMessage.RESULT_FOUND, searchResult);
     }
 
@@ -233,4 +238,42 @@ public class RestService implements RestServiceInterface {
         int myId = restMapper.getIdFromUserEmail(authentication.getName());
         return DefaultResponse.res(StatusCode.OK, ResponseMessage.READ_USER, myId);
     }
+
+    public DefaultResponse followCourse(int course_id){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.getName() == null || restMapper.findByEmail(authentication.getName()) == null){
+            return DefaultResponse.res(StatusCode.UNAUTHORIZED, ResponseMessage.DENIED);
+        }
+        int myId = restMapper.getIdFromUserEmail(authentication.getName());
+        String returnString = "";
+        if (restMapper.findIsUserFollowingCourse(myId, course_id) > 0) {
+            restMapper.unFollowCourse(myId, course_id);
+            returnString = "과목 등록을 취소하였습니다.";
+        }
+        else {
+            restMapper.followCourse(myId, course_id);
+            returnString = "과목을 등록하였습니다.";
+        }
+        return DefaultResponse.res(StatusCode.OK, returnString);
+    }
+
+
+    public DefaultResponse likeTask(int task_id){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.getName() == null || restMapper.findByEmail(authentication.getName()) == null){
+            return DefaultResponse.res(StatusCode.UNAUTHORIZED, ResponseMessage.DENIED);
+        }
+        int myId = restMapper.getIdFromUserEmail(authentication.getName());
+        String returnString = "";
+        if (restMapper.findIsUserLikesTask(myId, task_id) > 0) {
+            restMapper.unLikesTask(myId, task_id);
+            returnString = "좋아요를 취소하였습니다.";
+        }
+        else {
+            restMapper.likesTask(myId, task_id);
+            returnString = "좋아요를 등록하였습니다.";
+        }
+        return DefaultResponse.res(StatusCode.OK, returnString);
+    }
+
 }
