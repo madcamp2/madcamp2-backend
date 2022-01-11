@@ -96,17 +96,19 @@ if (restMapper.findKakaoId(stringId) <= 0) {
     }
 }
 ```
+![https://github.com/madcamp2/madcamp2-backend/blob/main/folder/KakaoTalk_Photo_2022-01-11-22-51-15%20006.png](https://github.com/madcamp2/madcamp2-backend/blob/main/folder/KakaoTalk_Photo_2022-01-11-22-51-15%20006.png)
 
 자체적으로 생성된 계정은 이메일과 비밀번호를 기반으로 암호화되며, 이후 비밀번호는 단방향 복호화 과정을 거쳐 데이터베이스에 등록된다. 이렇게 데이터베이스에 등록된 암호는 Spring Security기반으로 유저의 토큰에 담긴 정보와 함께 인증 절차에 사용된다.
 
 ![https://github.com/madcamp2/madcamp2-backend/blob/main/folder/database2.png](https://github.com/madcamp2/madcamp2-backend/blob/main/folder/database2.png)
-
+![https://github.com/madcamp2/madcamp2-backend/blob/main/folder/KakaoTalk_Photo_2022-01-11-22-51-15%20001.png](https://github.com/madcamp2/madcamp2-backend/blob/main/folder/KakaoTalk_Photo_2022-01-11-22-51-15%20001.png)
 ### 과목 검색
 
 과목 검색은 제목 혹은 학수번호를 통해 이루어지며 검색 결과는 과목에 좋아요를 표시한 학생 수, 분반 등의 정보를 포함하여 조회됩니다. 팔로우 수가 가장 많은 과목은 홈 화면에 학교와 관계없이 출력됩니다.
 
-### 다른 유저의 task보기
-
+### 자신 및 다른 유저의 task보기
+![https://github.com/madcamp2/madcamp2-backend/blob/main/folder/KakaoTalk_Photo_2022-01-11-22-51-15%20005.png](https://github.com/madcamp2/madcamp2-backend/blob/main/folder/KakaoTalk_Photo_2022-01-11-22-51-15%20005.png)
+![]
 모든 유저들의 작업은 과목별로 분류됩니다. 유저들은 같은 과목을 수강하거나 공부하는 유저들의  Task를 보고 이에 반응할 수 있습니다.
 
 ### 할 일 추가 및 점검
