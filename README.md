@@ -68,6 +68,8 @@ root@camp-3:~# sudo systemctl status everyTask.service
 
 ### 3. Database
 
+![image](https://user-images.githubusercontent.com/82388712/151817399-927ca021-881f-4a53-a0fd-afe450d04f87.png)
+
 ![https://github.com/madcamp2/madcamp2-backend/blob/main/folder/database.png](https://github.com/madcamp2/madcamp2-backend/blob/main/folder/database.png)
 
 ## 4. Functionality & Implementation
