@@ -68,8 +68,6 @@ root@camp-3:~# sudo systemctl status everyTask.service
 
 ### 3. Database
 
-![image](https://user-images.githubusercontent.com/82388712/151817399-927ca021-881f-4a53-a0fd-afe450d04f87.png)
-
 ![https://github.com/madcamp2/madcamp2-backend/blob/main/folder/database.png](https://github.com/madcamp2/madcamp2-backend/blob/main/folder/database.png)
 
 ## 4. Functionality & Implementation
@@ -79,6 +77,10 @@ root@camp-3:~# sudo systemctl status everyTask.service
 [Swagger UI](http://192.249.18.137/swagger-ui.html)
 
 ### 로그인
+
+|Log In Screen|Sign Up Screen|
+|:-:|:-:|
+|<img width="291" alt="스크린샷 2022-01-11 오후 9 03 16" src="https://user-images.githubusercontent.com/82388712/151819327-8a025451-9f26-45cf-9b18-d97c07af2985.png">|<img width="271" alt="스크린샷 2022-01-11 오후 9 03 42" src="https://user-images.githubusercontent.com/82388712/151819188-01617bc0-b791-4436-9a00-7c801e8045db.png">
 
 로그인은 카카오 아이디로 로그인 혹은 어플리케이션 회원가입을 통한 계정 생성 후의 로그인이 있다. 이 때 카카오톡 아이디를 통해 생성한 계정은 카카오톡 토큰을 이용해 얻어온 uid를 기반으로 새로운 암호화 과정을 거쳐 Json Web Token을 지급받게 된다. 
 
@@ -98,19 +100,36 @@ if (restMapper.findKakaoId(stringId) <= 0) {
     }
 }
 ```
-![https://github.com/madcamp2/madcamp2-backend/blob/main/folder/KakaoTalk_Photo_2022-01-11-22-51-15%20006.png](https://github.com/madcamp2/madcamp2-backend/blob/main/folder/KakaoTalk_Photo_2022-01-11-22-51-15%20006.png)
+
+|Kakao Auth Screen|
+|:-:|
+|<img width="371" src="https://github.com/madcamp2/madcamp2-backend/blob/main/folder/KakaoTalk_Photo_2022-01-11-22-51-15%20006.png">
 
 자체적으로 생성된 계정은 이메일과 비밀번호를 기반으로 암호화되며, 이후 비밀번호는 단방향 복호화 과정을 거쳐 데이터베이스에 등록된다. 이렇게 데이터베이스에 등록된 암호는 Spring Security기반으로 유저의 토큰에 담긴 정보와 함께 인증 절차에 사용된다.
 
 ![https://github.com/madcamp2/madcamp2-backend/blob/main/folder/database2.png](https://github.com/madcamp2/madcamp2-backend/blob/main/folder/database2.png)
-![https://github.com/madcamp2/madcamp2-backend/blob/main/folder/KakaoTalk_Photo_2022-01-11-22-51-15%20001.png](https://github.com/madcamp2/madcamp2-backend/blob/main/folder/KakaoTalk_Photo_2022-01-11-22-51-15%20001.png)
-### 과목 검색
+
+
+### 홈 스크린
+
+|Home Screen|
+|:-:|
+|<img width="371" src="https://user-images.githubusercontent.com/82388712/151821653-e9f8d269-5b3b-45ef-8230-99ec38a2c06d.png">
+
+### 과목 검색 (진행중)
 
 과목 검색은 제목 혹은 학수번호를 통해 이루어지며 검색 결과는 과목에 좋아요를 표시한 학생 수, 분반 등의 정보를 포함하여 조회됩니다. 팔로우 수가 가장 많은 과목은 홈 화면에 학교와 관계없이 출력됩니다.
 
+|Search|
+|:-:|
+|<img width="371" src="https://user-images.githubusercontent.com/82388712/151822487-b194b102-0ef8-4caa-b284-ffe2e9096fdf.png">
+
 ### 자신 및 다른 유저의 task보기
-![https://github.com/madcamp2/madcamp2-backend/blob/main/folder/KakaoTalk_Photo_2022-01-11-22-51-15%20005.png](https://github.com/madcamp2/madcamp2-backend/blob/main/folder/KakaoTalk_Photo_2022-01-11-22-51-15%20005.png)
-![]
+
+|Monthly TODO|Weekly TODO|
+|:-:|:-:|
+|<img width="291" src="https://user-images.githubusercontent.com/82388712/151821151-67423397-ef7e-402c-a621-97a8fdff290a.png">|<img width="291" src="https://github.com/madcamp2/madcamp2-backend/blob/main/folder/KakaoTalk_Photo_2022-01-11-22-51-15%20001.png">
+
 모든 유저들의 작업은 과목별로 분류됩니다. 유저들은 같은 과목을 수강하거나 공부하는 유저들의  Task를 보고 이에 반응할 수 있습니다.
 
 ### 할 일 추가 및 점검
